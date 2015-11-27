@@ -1,0 +1,24 @@
+{% macro display_error(form) %}
+    {% import _self as forms %}
+    <ul>
+        {% for child in form if not child.vars.valid %}
+            <li class="link">
+                {% if child.vars.compound and not child.vars.valid %}
+                    {{ child.vars.label|trans|capitalize }}:
+                    {{ forms.display_error(child) }}
+                {% else %}
+                    <h5>
+                        <p>
+                            {{ child.vars.label|trans|capitalize }}:
+                            <small>
+                            {% for error in child.vars.errors %}
+                                {{ error.message|capitalize }}
+                            {% endfor %}
+                            </small>
+                        </p>                        
+                    </h5>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}

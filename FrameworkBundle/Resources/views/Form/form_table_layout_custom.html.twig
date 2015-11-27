@@ -1,0 +1,50 @@
+{% use 'form_div_layout.html.twig' with choice_widget_expanded as base_choice_widget_expanded %}
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+    {% for child in form %}
+        {{ form_widget(child) }}&nbsp;
+        {{ form_label(child) }} <br>
+    {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% use 'form_table_layout.html.twig' %}
+
+{% block form_row %}
+{% spaceless %}
+    <tr>
+        {% set col_span = 1 %} 
+        {% if ('genemu_plain' in block_prefixes) and (not (value))%}
+            {% set col_span = 2 %}   
+        {% endif %} 
+        <td colspan="{{ col_span }}">
+            {{ form_label(form) }}  
+        </td>
+        {% if col_span == 1 %}                    
+            <td>
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+            </td>  
+        {% endif %}                    
+    </tr>
+{% endspaceless %}
+{% endblock form_row %}
+
+{% block form_widget_compound %}
+{% spaceless %}
+    <table class="tblstd" {{ block('widget_container_attributes') }}>
+        {% if form.parent is empty and errors|length > 0 %}
+        <tr>
+            <td colspan="2">
+                {{ form_errors(form) }}
+            </td>
+        </tr>
+        {% endif %}
+        {{ block('form_rows') }}
+        {{ form_rest(form) }}
+    </table>
+{% endspaceless %}
+{% endblock form_widget_compound %}

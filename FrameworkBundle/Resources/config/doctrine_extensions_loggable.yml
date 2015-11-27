@@ -1,0 +1,23 @@
+# Include the Doctrnine extensions bundle mapping, see https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/symfony2.md
+
+doctrine:
+    orm:
+        mappings:
+            loggable:
+                type: annotation
+                alias: Gedmo
+                prefix: Gedmo\Loggable\Entity
+                # make sure vendor library location is correct
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+                
+                
+services:
+  doctrine_extension_loggable_listener:
+    class: LooopCore\FrameworkBundle\Listeners\DoctrineExtensionLoggableListener
+    calls:
+        - [ setContainer, [ @service_container ] ]
+    tags:
+        # translatable sets locale after router processing
+        - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest, priority: -10 }
+        # loggable hooks user username if one is in security context
+        - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

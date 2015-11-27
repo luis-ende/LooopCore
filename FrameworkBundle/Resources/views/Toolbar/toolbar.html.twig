@@ -1,0 +1,9 @@
+<ul class="looop_bar_filters">
+    {% for command in commands %}
+        <li>
+            <a href="{{ path(command.route, command.routeParams) }}" class="collapsed">
+                <span>{{ command.title }}</span>
+            </a>
+        </li>
+    {% endfor %}
+</ul>

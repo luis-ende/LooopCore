@@ -1,0 +1,3 @@
+looop_core_framework_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: LooopCoreFrameworkBundle:Default:index }

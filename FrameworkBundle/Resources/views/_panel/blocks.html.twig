@@ -1,0 +1,19 @@
+{% block panels %}
+    <div class="looop_bar">
+        {% for panel in panels %}            
+            {% if (panel.visible) %}
+                {{ panel_widget(panel) }}
+            {% endif %}            
+        {% endfor %}        
+    </div>
+{% endblock %}
+
+{% block panel %}            
+    <div class="looop_bar_box">
+        <h2>{{ panel.title }}</h2>
+        {% if panel.source %}
+            {% set content = render(controller(panel.source, { 'panel': panel })) %}
+            {{ content | raw }}
+        {% endif %}    
+    </div>
+{% endblock %}

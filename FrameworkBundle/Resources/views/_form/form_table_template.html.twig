@@ -1,0 +1,16 @@
+{% extends '::baseLayout.html.twig' %}
+
+{% form_theme form form_theme|default('LooopCoreFrameworkBundle:Form:form_table_layout_custom.html.twig') %}
+
+{% block body %}        
+    {{ parent() }}
+    <div class="">        
+            <form action="#" class="form-horizontal" method="post" {{ form_enctype(form) }}>                        
+                {{ form_widget(form) }}                                                
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Speichern</button>                    
+                </div>
+            </form>
+        </div>        
+{% endblock %}

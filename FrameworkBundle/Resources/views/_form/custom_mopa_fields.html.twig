@@ -1,0 +1,28 @@
+{% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
+
+{% block form_rows_visible %}
+{% spaceless %}
+    {% if form_errors(form) %}
+        <div class="symfony-form-errors">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+    {% for child in form %}        
+        {# Normal behaviour in MopaBootstrapBundle Twig's default template #}
+        {% if 'hidden' not in child.vars.block_prefixes %} 
+            {{ form_row(child) }}
+        {% else %}
+            {# Modified behaviour for LLP #}
+            {% if 'user' in child.vars.block_prefixes %}
+                {{ form_row(child) }}
+            {% endif %}        
+        {% endif %}        
+    {% endfor %}
+{% endspaceless %}
+{% endblock form_rows_visible %}
+
+{% block form_help %}    
+{% spaceless %}
+{% if help_block %}<p id="{{ id ~ '_help' }}" class="help-block">{{ help_block|trans({}, translation_domain)|raw }}</p>{%endif %}
+{% endspaceless %}
+{% endblock form_help %}

@@ -1,0 +1,24 @@
+# Include the Doctrnine extensions bundle mapping, see https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/symfony2.md
+
+doctrine:
+    orm:
+        mappings:
+            tree:
+                type: yml
+                alias: Gedmo
+                prefix: Gedmo\Tree\Entity
+                # make sure vendor library location is correct
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                
+stof_doctrine_extensions:
+    orm:
+        default: 
+            tree: true
+            
+services:
+    gedmo.listener.tree:
+        class: Gedmo\Tree\TreeListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]

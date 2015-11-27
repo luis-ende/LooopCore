@@ -1,0 +1,17 @@
+doctrine:
+    orm:
+        entity_managers:
+            default:
+                filters:
+                    softdeleteable:
+                        class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                        enabled: true
+                        
+                        
+services:
+  gedmo.listener.softdeletable:
+    class: Gedmo\SoftDeleteable\SoftDeleteableListener
+    tags:
+        - { name: doctrine.event_subscriber, connection: default }
+    calls:
+        - [ setAnnotationReader, [ @annotation_reader ] ]

@@ -1,0 +1,15 @@
+{% block plain_link_widget %}   
+    <div {{ block('container_attributes') }}>                
+        <ul>
+            <li class="link">
+                <a href="{{ link_route != '' ? path(link_route, link_params) : '' }}" {{ block('widget_attributes') }}>{{ link_label|escape }}</a>                 
+            </li>
+        </ul>        
+    </div>
+{% endblock %}
+
+{% block data_grid_widget %}   
+    <div {{ block('container_attributes') }}>                
+        {{ grid(grid, grid_template) }}
+    </div>
+{% endblock %}

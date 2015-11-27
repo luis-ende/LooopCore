@@ -1,0 +1,54 @@
+{% extends '::baseLayout.html.twig' %}
+
+
+{% block head_script %}        
+    {# -- evt fixen ---% javascripts
+        'bundles/looopcorecommons/js/jquery.min.js'    
+        'bundles/looopcorecommons/js/jquery-ui.min.js'    
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %#}
+{% endblock head_script %}
+
+{% form_theme form form_theme|default('MopaBootstrapBundle:Form:fields.html.twig') %}
+
+{% block body %}    
+    {{ parent() }}    
+    {% block form_tab_widget %}
+        
+        {% import "LooopCoreFrameworkBundle:Form:macros.html.twig" as macros %}
+        {% from 'MopaBootstrapBundle::flash.html.twig' import flash, advanced_flash %}
+        {% if not form.vars.valid %}            
+            {% set error_messages %} 
+                {{ macros.display_error(form) }} 
+            {% endset %}
+            {{ advanced_flash('danger', 'Es sind Fehler aufgetreten. Bitte überprüfen Sie nachstehend Ihre Eingabe:', error_messages , true, true) }}
+        {% endif %}
+        
+        {% if form_data_saved %}
+            {{ flash('success', 'Änderungen gespeichert.', true, false) }}
+        {% endif %}
+        
+        <div class="">        
+            <form action="#" class="form-horizontal" method="post" {{ form_enctype(form) }}>                        
+                {{ form_widget(form) }}
+
+                {% block submit_button %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Speichern</button>                    
+                </div>
+                {% endblock %}
+            </form>
+        </div>        
+    {% endblock form_tab_widget %}    
+{% endblock body %}        
+
+{% block foot_script_assetic %}
+    {% javascripts
+    '@MopaBootstrapBundle/Resources/public/bootstrap-sass/assets/javascripts/bootstrap/*.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock foot_script_assetic %}

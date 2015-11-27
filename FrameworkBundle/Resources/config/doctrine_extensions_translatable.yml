@@ -1,0 +1,15 @@
+# Include the Doctrnine extensions bundle mapping, see https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/symfony2.md
+
+doctrine:
+    orm:
+        mappings:
+            translatable:
+                type: annotation
+                alias: Gedmo
+                prefix: Gedmo\Translatable\Entity
+                # make sure vendor library location is correct
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+                
+                
+stof_doctrine_extensions:
+    default_locale: de_DE

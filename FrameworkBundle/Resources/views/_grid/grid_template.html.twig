@@ -1,0 +1,31 @@
+{% extends 'APYDataGridBundle::blocks.html.twig' %}
+
+{# ---------------------------------------------------- grid_pager -------------------------------------------------- #}
+{% block grid_pager %}
+    {% if pagerfanta %}
+        <div class="pager">
+        {{ grid_pagerfanta(grid) }}
+        {{ grid_pager_totalcount(grid) }}
+        {{ grid_pager_results_perpage(grid) }}
+        </div>
+    {% else %}
+        <div class="pager" style="float:left">
+            {{ grid_pager_totalcount(grid) }}
+            {{ grid_pager_selectpage(grid) }}
+            {{ grid_pager_results_perpage(grid) }}
+        </div>
+    {% endif %}
+{% endblock grid_pager %}
+{# ---------------------------------------------------- grid_pager_totalcount -------------------------------------------------- #}
+{% block grid_pager_totalcount %}
+{{ '%count% Results.' | transchoice(grid.totalCount, {'%count%': grid.totalCount}) }}
+{% endblock grid_pager_totalcount %}
+{# ---------------------------------------------------- grid_pager_results_perpage -------------------------------------------------- #}
+{% block grid_pager_results_perpage %}
+{{ ' Display'|trans }}
+<select onchange="return {{ grid.hash }}_resultsPerPage(this.value);">
+{% for key, value in grid.limits %}
+    <option value="{{ key }}"{% if (key == grid.limit) %} selected="selected"{% endif %}>{{ value }}</option>
+{% endfor %}
+</select> {{ 'Items per page'|trans }}
+{% endblock grid_pager_results_perpage %}

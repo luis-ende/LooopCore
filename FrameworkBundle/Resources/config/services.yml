@@ -1,0 +1,93 @@
+services:
+
+    # ViewBuilder creation service classes    
+    looopcore.viewbuilder_registry:
+        class: LooopCore\FrameworkBundle\Factory\ViewBuilderRegistry        
+    looopcore.viewbuilder_factory:
+        class: LooopCore\FrameworkBundle\Factory\ViewBuilderFactory
+        arguments: ["@looopcore.viewbuilder_registry", "@looopcore.workspace"]
+
+    # Configuration strategies for the available builders
+    looopcore.grid_builder_config_strategy:
+        class: LooopCore\FrameworkBundle\Builder\Grid\GridBuilderConfigStrategy        
+    looopcore.form_builder_config_strategy:
+        class: LooopCore\FrameworkBundle\Builder\Form\FormBuilderConfigStrategy      
+    looopcore.menu_builder_config_strategy:
+        class: LooopCore\FrameworkBundle\Builder\Menu\MenuBuilderConfigStrategy   
+    looopcore.panel_builder_config_strategy:
+        class: LooopCore\FrameworkBundle\Builder\Panel\PanelBuilderConfigStrategy
+    looopcore.toolbaraction_builder_config_strategy:
+        class: LooopCore\FrameworkBundle\Builder\Toolbar\ToolbarActionConfigStrategy
+        
+    # PanelManager
+    looopcore.panel_manager:
+        class: LooopCore\FrameworkBundle\Builder\Panel\PanelManager
+        arguments: ["@event_dispatcher"]                                        
+        
+    # Workspace
+    looopcore.workspace:
+        class: LooopCore\FrameworkBundle\Builder\Workspace\WorkspaceBuilder
+        arguments: ["@service_container"]
+
+    # Twig extensions
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+            
+    looopcore.twig.extension.panel_manager:
+        class: LooopCore\FrameworkBundle\Twig\PanelExtension
+        arguments: ["@looopcore.panel_manager"]
+        tags:
+            - { name: twig.extension }
+
+    # Symfony Form Types
+    form.type.datePicker:
+        class: LooopCore\FrameworkBundle\Form\Type\DatePickerType
+        arguments: [ "%date_format_form%" ]
+        tags:
+            - { name: form.type, alias: datePicker }
+    form.type.dateTimePicker:
+        class: LooopCore\FrameworkBundle\Form\Type\DateTimePickerType
+        arguments: [ "%date_format_form%" ]
+        tags:
+            - { name: form.type, alias: dateTimePicker }
+    form.type.plainLink:
+        class: LooopCore\FrameworkBundle\Form\Type\PlainLinkType
+        tags:
+            - { name: form.type, alias: plain_link }     
+            
+    form.type.dataGrid:
+        class: LooopCore\FrameworkBundle\Form\Type\DataGridType
+        tags:
+            - { name: form.type, alias: data_grid }
+
+    # Grid Column Types
+    looopapp.text_column_type:
+        class: APY\DataGridBundle\Grid\Column\TextColumn
+    looopapp.number_column_type:
+        class: APY\DataGridBundle\Grid\Column\NumberColumn
+    looopapp.boolean_column_type:
+        class: APY\DataGridBundle\Grid\Column\BooleanColumn
+    looopapp.date_column_type:
+        class: APY\DataGridBundle\Grid\Column\DateColumn
+    looopapp.datetime_column_type:
+        class: APY\DataGridBundle\Grid\Column\DateTimeColumn
+    looopapp.time_column_type:
+        class: APY\DataGridBundle\Grid\Column\TimeColumn
+    looopapp.actions_column_type:
+        class: APY\DataGridBundle\Grid\Column\ActionsColumn
+    looopapp.array_column_type:
+        class: APY\DataGridBundle\Grid\Column\ArrayColumn
+    looopapp.blank_column_type:
+        class: APY\DataGridBundle\Grid\Column\BlankColumn
+    looopapp.mass_action_column_type:
+        class: APY\DataGridBundle\Grid\Column\MassActionColumn
+    looopapp.untyped_column_type:
+        class: APY\DataGridBundle\Grid\Column\UntypedColumn
+    looopapp.join_column_type:
+        class: APY\DataGridBundle\Grid\Column\JoinColumn
+    looopapp.rank_column_type:
+        class: APY\DataGridBundle\Grid\Column\RankColumn
+
+

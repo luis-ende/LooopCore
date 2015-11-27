@@ -1,0 +1,8 @@
+{% extends '::baseLayout.html.twig' %}
+
+{% form_theme form form_theme|default('LooopCoreFrameworkBundle:Form:form_div_layout_custom.html.twig') %}
+
+{% block body %}        
+    {{ parent() }}
+    {{ form(form) }}
+{% endblock %}
