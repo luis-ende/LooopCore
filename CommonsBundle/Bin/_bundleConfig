@@ -1,0 +1,3 @@
+DB_PREFIX="commons";
+BUNDLE_FILTER="LooopCore\\\CommonsBundle";
+CONFIG_FILE="src/LooopCore/CommonsBundle/Resources/config/doctrine-migrations-config.yml";
