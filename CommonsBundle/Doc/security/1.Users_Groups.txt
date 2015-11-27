@@ -1,0 +1,31 @@
+* LLP Base uses the FOSUserBundle to manage user and group management
+-> FOSUserBundle must be added to composer.json and app/AppKernel.php
+
+FOSUserBundle provides:
+-> User and Goup DB definitions, that are extended by looopcorecommons
+-> Templates and functionality to register / change password etc.
+
+We have the entities "user" and "group" in the base bundle, which extend the classes
+from the FOSUserBundle.
+The connection user-group is N:M.
+
+Also, there are fixed ROLES defined in the config files of each bundle.
+
+The connection is as follows:
+User <-> Group <-> Role [ <-> Rights]
+
+
+What is there:
+-> Templates to register / login / change pw / send forgotten password etc.
+
+
+What has to be done:
+--------------------
+
+-> Let the FOSUserBundle templates use the base layout
+-> integrate more GUI functions 
+  -> it's possible to use the SonataAdminBundle to automatically 
+     create controllers to edit the DB (Users/Groups/Roles)
+
+Note (!!!): 3 classes inside the FOSUserBundle have to be replaced in /vendor. (that will be fixed in the future)
+See <LooopCoreCommonsBundle>/doc/overwrites

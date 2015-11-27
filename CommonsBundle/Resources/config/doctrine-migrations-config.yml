@@ -1,0 +1,4 @@
+name: LooopCore CommonsBundle Migrations
+migrations_namespace: LooopCore\CommonsBundle\DoctrineMigrations
+table_name: commons__DB_version
+migrations_directory: 'src/LooopCore/CommonsBundle/DoctrineMigrations'

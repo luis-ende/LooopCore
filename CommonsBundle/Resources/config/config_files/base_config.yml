@@ -1,0 +1,4 @@
+twig:
+    globals:
+        date_format_datepicker:  %date_format_datepicker%
+        app_title:  %app_title%

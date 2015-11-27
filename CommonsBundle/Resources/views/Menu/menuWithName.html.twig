@@ -1,0 +1,11 @@
+{% extends 'LooopCoreCommonsBundle:Menu:knp_menu.html.twig' %}
+
+{% block root %}
+    {% set listAttributes = item.childrenAttributes %}
+    <h2>
+        {% block menu_header %}
+            {{item.name}}
+        {% endblock %}
+    </h2>
+    {{ block('root') -}}
+{% endblock %}

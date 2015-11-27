@@ -1,0 +1,21 @@
+llp_base_homepage:
+    pattern:  /
+    defaults: { _controller: LooopCoreCommonsBundle:Index:index }
+    
+llp_base_auth_login:
+    pattern:  /mylogin
+    defaults: { _controller: LooopCoreCommonsBundle:Auth:login }
+    
+auth_controller:
+    resource: "@LooopCoreCommonsBundle/Resources/config/routing/auth.yml"
+    prefix: "/"
+
+
+llp_base_sonataUser:
+    resource: "@LooopCoreCommonsBundle/Resources/config/routing/sonata_user.yml"
+    prefix: "/"
+
+llp_base_sonataAdmin:
+    resource: "@LooopCoreCommonsBundle/Resources/config/routing/sonata_admin.yml"
+    prefix: "/"
+

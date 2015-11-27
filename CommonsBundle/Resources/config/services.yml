@@ -1,0 +1,58 @@
+services:
+#    looop_core_commons.example:
+#        class: LooopCore\CommonsBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+### SECURITY ROLES ###
+# the roles in this bundle.
+# the roles with their inherited roles must be given
+# as a parameter.
+
+    looopcore.security.global_role_hierarchy:
+      class: LooopCore\CommonsBundle\Security\Roles\GlobalRoleHierarchy
+      public: true
+
+
+    security.role_hierarchy:
+      class: LooopCore\CommonsBundle\Security\Roles\SymfonyRoleHierarchyOverride
+      public: true
+      arguments:
+        - %security.role_hierarchy.roles%
+
+    looopcore.security.bundle_role_hierarchy2:
+      class: LooopCore\CommonsBundle\Security\Roles\BundleRoleHierarchy
+      public: false
+      arguments:
+        - roles:
+          - ROLE_ADMIN: [ROLE_USER, ROLE_BACKEND, ROLE_looopcore_ADMIN, ROLE_SONATA_ADMIN]
+          - ROLE_BACKEND: [ROLE_SONATA_ADMIN]
+          - ROLE_SUPER_ADMIN: [ROLE_ADMIN]
+          - ROLE_BACKEND_USER: [ROLE_ADMIN]
+          - ROLE_looopcore_ADMIN: [ROLE_USER]
+          - ROLE_looopcore_EXAMPLE: [ROLE_USER]
+      tags:
+          - { name: looopcore.security.bundle_roles }
+### END SECURITY ROLES ###
+
+### SECURITY VOTERS ###
+    user_voter:
+      class: LooopCore\CommonsBundle\Security\EntityVoters\UserVoter
+      public: false
+      arguments: [ "@service_container" ]
+      tags:
+          - { name: security.voter }
+
+    general_voter:
+      class: LooopCore\CommonsBundle\Security\GeneralVoters\TestGeneralVoter
+      public: false
+      arguments: [ "@service_container" ]
+      tags:
+          - { name: security.voter }
+
+### END VOTERS      ###
+
+    looopcore.panelManagerSubscriber:
+      class: LooopCore\CommonsBundle\Builder\Panel\PanelManagerSubscriber
+      arguments: ["@service_container"]            
+      tags:
+          - { name: looopcore.event_subscriber }

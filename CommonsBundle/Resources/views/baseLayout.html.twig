@@ -1,0 +1,95 @@
+{% extends 'LooopCoreCommonsBundle::baseHTMLLayout.html.twig' %}
+
+
+{#- title -----------------------------------------------------------------------------------------------------------#}
+
+{% block title %}Looop Homepage{% endblock title %}{# will only affect the <header><title></title></header> #}
+
+
+{#- organisation_title ----------------------------------------------------------------------------------------------#}
+
+{% block organisation_title %}CHARITÉ{% endblock organisation_title %}
+
+
+{#- header ----------------------------------------------------------------------------------------------------------#}
+
+{% block header %}
+    Abteilung für Curriculumsorganisation
+{% endblock header %}
+
+
+{#- css -------------------------------------------------------------------------------------------------------------#}
+
+{% block css %}
+
+    {{ parent() }}
+
+    {# compile and include the main stylesheet, cssrewrite will adjust the paths to the new location #}
+    {% stylesheets filter='cssrewrite,?yui_css' 'bundles/looopcorecommons/sass/looop.scss*' %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+    {% endstylesheets %}
+
+    {# include all stylesheets in css/ #}
+    {% stylesheets filter="cssrewrite" 'bundles/looopcorecommons/css/*' %}
+    <link href="{{ asset_url }}" rel="stylesheet" type="text/css" media="all" />
+    {% endstylesheets %}
+
+    {% if form is defined %}
+        {{ form_stylesheet(form) }}
+    {% endif %}
+
+{% endblock css %}
+
+
+{#- javascripts -----------------------------------------------------------------------------------------------------#}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {# include all stylesheets in js/ #}
+    {% javascripts '@LooopCoreCommonsBundle/Resources/public/js/*' %}
+    <script type="text/javascript" src="{{ asset_url }}" ></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ asset('bundles/looopcorecommons/js/select2-locale/select2_locale_' ~ app.request.locale ~ '.js') }}" ></script>
+
+{% endblock javascripts %}
+
+
+{#- foot_scripts ----------------------------------------------------------------------------------------------------#}
+
+{% block foot_script %}
+
+    {{ parent() }}
+
+    {% if form is defined %}
+        {{ form_javascript(form) }}
+    {% endif %}
+
+{% endblock foot_script %}
+
+
+{#- menu_side -------------------------------------------------------------------------------------------------------#}
+
+{% block menu_side %}
+
+    {{ parent() }}
+
+    {# load and insert a menu for developers #}
+
+    <div>
+        {{ knp_menu_render('test', {'template': 'LooopCoreCommonsBundle:Menu:menuWithNameCollapsible.html.twig'}) }}
+    </div>
+
+{% endblock menu_side %}
+
+
+{#% if app.user is empty %}
+    Welcome!
+{% else %}
+    Hello {{ app.user.username }}
+{% endif %}
+{% block pageTitle %}
+    {{ app_title }}
+{% endblock %#}

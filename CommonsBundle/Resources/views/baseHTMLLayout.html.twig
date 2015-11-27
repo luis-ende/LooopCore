@@ -1,0 +1,134 @@
+{#
+    This page uses bootstrap-sass > 3.2.0.
+
+    The structure is composed of three containers with one row each:
+    * header
+    * div.middle
+    * footer
+
+    Each row comprises two or three columns:
+    * a | b | a
+    * a | c
+
+    Where a is a small column and b and c are larger columns. The width of c equals a + b.
+    a, b and c become full-width if the screen is small than the breaking point.
+    For further information see looop.scss
+#}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+            <meta http-equiv="Content-Type" content="text/html; charset={{ _charset }}"/>
+            <meta name="robots" content="noindex,nofollow" />
+            <title>{% block title %}LOOOP{% endblock %}</title>
+
+            {% block css %}
+
+                {% block custom_css %}
+                    {# let bundles register their css #}
+                {% endblock custom_css %}
+
+            {% endblock css %}{# / .looop_banner #}
+
+            {% block javascripts %}
+
+                {% block head_script %}
+                    {# let bundles register their js #}
+                {% endblock head_script %}
+
+            {% endblock javascripts %}
+        {% endblock head %}
+    </head>
+
+    {% block bodyTag %}        
+    <body>        
+    {% endblock bodyTag %}   
+
+        {% block completeBody %}
+
+            <header class="container-fluid">
+
+                <div class="row">
+
+                    <div class="looop_logo">
+                        {{ knp_menu_render('quick') }}
+                        <span>{% block organisation_title %}{% endblock organisation_title %}</span>
+                    </div>{# / .looop_logo #}
+
+                    <div class="looop_banner">
+                        <div class="looop_header_top">
+                            <p>
+                                {% block header %}
+                                {% endblock header %}
+                            </p>
+                        </div>{# / .looop_header_top #}
+                    </div>{# / .looop_banner #}
+
+                    <nav class="looop_menu_top looop_nav_menu">
+
+                        <div>
+                            {{ knp_menu_render('main', {'template': 'LooopCoreCommonsBundle:Menu:menuWithNameCollapsible.html.twig'}) }}
+                        </div>
+
+                    </nav>{# / .looop_menu_top .looop_nav_menu #}
+
+                </div>{# / .row #}
+
+            </header>{# / .container-fluid #}
+
+            <div class="middle container-fluid">
+
+                <div class="row">
+
+                    <nav class="looop_menu_side looop_nav_menu">
+                        {# todo-me the menu sections should be created by a twig function to make these elements more extensible #}
+                        {% block menu_side %}
+                            <div class="looop_hide_on_small">
+                                {{ knp_menu_render('main', {'template': 'LooopCoreCommonsBundle:Menu:currentBranchOnly.html.twig'}) }}
+                            </div>{# / .looop_hide_on_small #}
+                            {% block curricular_menu  %}
+                                <div>
+                                    {{ knp_menu_render('looop_curric_menu', {'template': 'LooopCoreCommonsBundle:Menu:looop_menu.html.twig'}) }}
+                                </div>
+                            {% endblock %}
+                            <div>
+                                {{ knp_menu_render('mission_controll', {'template': 'LooopCoreCommonsBundle:Menu:menuWithNameCollapsible.html.twig'}) }}
+                            </div>
+                            {# add menus here #}
+                        {% endblock %}
+                    </nav>{# / .looop_menu_side .looop_nav_menu #}
+
+                    <main class="looop_main">
+                        {% block bar %} 
+                            {{ panels() }} 
+                        {% endblock bar %}                        
+                        {% block content %}
+                            {% for type, flashMessagesOfType in app.session.flashbag.all %}
+                                {% for flashMessage in flashMessagesOfType %}
+                                    <div class="alert alert-{{type}} fade in  alert-dismissable">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        {{ flashMessage }}
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        {% block body %}{% endblock body %}
+                    {% endblock content %}
+                </main>{# / .looop_main #}
+
+                <aside class="looop_news">
+                </aside>{# / .looop_news #}
+
+            </div>
+
+        </div>
+
+        <footer class="container-fluid">
+        </footer>{# / .container-fluid #}
+    {% endblock completeBody %}
+
+    {% block foot_script %}
+        {% block foot_script_assetic %}
+        {% endblock foot_script_assetic %}
+    {% endblock foot_script %}
+</body>
+</html>

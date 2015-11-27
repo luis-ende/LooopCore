@@ -1,0 +1,65 @@
+{% extends 'LooopCoreCommonsBundle:Menu:knp_menu.html.twig' %}
+
+{% macro attributes(attributes) %}
+{%- for name, value in attributes -%}
+    {%- if value is not none and value is not sameas(false) -%}
+        {{- ' %s="%s"'|format(name, value is sameas(true) ? name|e : value|e)|raw -}}
+    {%- endif -%}
+{%- endfor -%}
+{% endmacro %}
+
+
+{% block root %}
+{% set listAttributes = item.childrenAttributes %}
+{{ block('rootlist') -}}
+{% endblock %}
+
+{% block rootlist %}
+{% if item.hasChildren and options.depth is not sameas(0) and item.displayChildren %}
+    <ul{{ _self.attributes(listAttributes) }}>
+        {{ block('rootchildren') }}
+    </ul>
+{% endif %}
+{% endblock %}
+
+{% block rootchildren %}
+{# save current variables #}
+{% set currentOptions = options %}
+{% set currentItem = item %}
+{# update the depth for children #}
+{% if options.depth is not none %}
+{% set options = currentOptions|merge({'depth': currentOptions.depth - 1}) %}
+{% endif %}
+{%- if matcher.isAncestor(item) %}
+{#% if item.currentAncestor %#}
+    {% for item in currentItem.children %}
+        {%- if matcher.isCurrent(item) or matcher.isAncestor(item) %}
+        {#% if item.currentAncestor or item.current %#}
+            {{ block('item') }}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{# restore current variables #}
+{% set item = currentItem %}
+{% set options = currentOptions %}
+{% endblock %}
+
+
+{% block children %}
+{# save current variables #}
+{% set currentOptions = options %}
+{% set currentItem = item %}
+{# update the depth for children #}
+{% if options.depth is not none %}
+{% set options = currentOptions|merge({'depth': currentOptions.depth - 1}) %}
+{% endif %}
+{%- if matcher.isCurrent(item) or matcher.isAncestor(item) %}
+{#% if item.currentAncestor or item.current %#}
+    {% for item in currentItem.children %}
+        {{ block('item') }}
+    {% endfor %}
+{% endif %}
+{# restore current variables #}
+{% set item = currentItem %}
+{% set options = currentOptions %}
+{% endblock %}

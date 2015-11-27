@@ -1,0 +1,25 @@
+<div id="looop_bar_filterbar" role="tablist" aria-multiselectable="true">
+        <ul class="looop_bar_filters" class="panel">
+            {% for filter in filters %}
+                <li role="tab" id="{{ filter.id }}_tab">
+                    <a data-toggle="collapse" class="collapsed" data-parent="#looop_bar_filterbar" href="#{{ filter.id }}" aria-expanded="false" aria-controls="{{ filter.id }}">
+                        <span>{{ filter.name }}</span>
+                        <span class="caret"></span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="panel">
+            {% for filter in filters %}
+                <div id="{{ filter.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{ filter.id }}_tab"><div class="panel-body">
+                        <select>
+                            {% for option in filter.options %}
+                                <option>
+                                    {{ option }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div></div>
+                {% endfor %}
+        </div>
+</div>

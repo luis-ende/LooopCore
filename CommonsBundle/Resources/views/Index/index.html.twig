@@ -1,0 +1,85 @@
+{% extends '::baseLayout.html.twig' %}
+
+{% block body -%}
+<b>Welcome to Looop Home.</b><br/>
+Please choose from the Menu.
+
+<br/><br/>
+Security Checks: <br/>
+
+<hr/>
+Logged in: 
+    {% if app.user is empty %}
+        No
+    {% else %}
+        As "<b>{{ app.user.username }}</b>"
+        <br/>
+        Current Roles:
+                {% for role in app.user.roles %}
+                      {{ role }}
+                {% endfor %}
+        <br/>
+        Current Roles with parent:
+                {% for role in allUserRoles %}
+                      {{ role }}
+                {% endfor %}
+
+        <br/>
+        Current Groups:
+        {% for group in app.user.groups %}
+              {{ group.name }} |
+        {% endfor %}
+    {% endif %}
+
+<br/><br/>
+Security demonstration -> Current Access to registered users:
+<br/><br/>
+<table border="1">
+    <tr>
+        <td>ID</td><td>Username</td><td>Right "CREATE"</td>
+        <td>Right "DELETE"</td><td>Right "EDIT"</td><td>Right "MYCUSTOM"</td>
+        <td>Direct Roles</td><td>all Roles in hierarchy</td>
+    </tr>
+
+{% for user in allUsers %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ is_granted("CREATE", user) ? "yes" : "no" }}</td>
+        <td>{{ is_granted("DELETE", user) ? "yes" : "no" }}</td>
+        <td>{{ is_granted("EDIT", user) ? "yes" : "no" }}</td>
+        <td>
+            {{ is_granted("MYCUSTOM", user) ? "yes" : "no" }}
+        </td>
+        <td>
+            {% for role in user.roles %}
+              {{ role }}  |
+            {% endfor %}
+        </td>
+        <td>
+            {% for role in user.allRolesWithParentRoles %}
+              {{ role }}  |
+            {% endfor %}
+        </td>
+        </tr>
+{% endfor %}
+    </table>
+<br/>
+
+Global Permission "DOSOMETHING": 
+    {{ is_granted("DOSOMETHING", "TESTGENERAL") ? "yes" : "no" }}
+    
+    
+<hr/>
+Roles defined in all bundles:<br/>
+{% for role, parentRoles in allRoles %}
+    -{{ role }} based on  
+    {% for parentRole in parentRoles %}
+        {{ parentRole }},
+    {% endfor %}
+    <br/>
+{% endfor %}
+    
+    
+    
+{% endblock %}

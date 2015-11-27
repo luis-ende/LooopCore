@@ -1,0 +1,5 @@
+{% extends '::baseLayout.html.twig' %}
+{% block completeBody %}
+    {{ parent() }}
+    {% render controller("FOSUserBundle:Security:login") %}
+{% endblock %}

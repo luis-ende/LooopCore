@@ -1,0 +1,33 @@
+{% extends 'LooopCoreCommonsBundle:Menu:menuWithName.html.twig' %}
+
+{% macro attributes(attributes) %}
+    {%- for name, value in attributes -%}
+    {%- if value is not none and value is not sameas(false) -%}
+    {{- ' %s="%s"'|format(name, value is sameas(true) ? name|e : value|e)|raw -}}
+    {%- endif -%}
+    {%- endfor -%}
+{% endmacro %}
+
+{% block root %}
+    {% set listAttributes = item.childrenAttributes %}
+    <h2>
+        {% block menu_header %}
+            <a href="#llp_menu_{{item.name}}" data-toggle="collapse">
+                <span>{{ parent() }}</span>
+                <span class="caret"></span>
+            </a>
+        {% endblock %}
+    </h2>
+    {{ block('rootlist') -}}
+{% endblock %}
+
+{% block rootlist %}
+    {% if item.hasChildren and options.depth is not sameas(0) and item.displayChildren %}
+        {%- set listAttributes = listAttributes|merge({'class': 'in'}) %}
+        {%- set rootlistid = ['llp_menu', item.name]|join('_') %}
+        {%- set listAttributes = listAttributes|merge({'id': rootlistid}) %}
+        <ul{{ _self.attributes(listAttributes) }}>
+            {{ block('children') }}
+        </ul>
+    {% endif %}
+{% endblock %}

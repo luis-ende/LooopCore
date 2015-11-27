@@ -1,0 +1,34 @@
+LooopCore\CommonsBundle\Entity\Group:
+    type: entity
+    table: commons_group
+    fields:
+                
+        id:
+            id: true
+            type: integer
+            generator:
+                strategy: IDENTITY
+                
+        # custom fields
+        createdAt:
+            type: datetime
+            nullable: false
+        updatedAt:
+            type: datetime
+            nullable: false
+
+        # fields from FOSUserBundle
+        # mapping definitions in FOSUserBundle classes
+#        name:
+#            type: string
+#            nullable: false
+
+    manyToMany:
+      users:
+        targetEntity: LooopCore\CommonsBundle\Entity\User
+        mappedBy: groups
+        
+            
+    lifecycleCallbacks:
+      preUpdate: [ setUpdateTimestamp ]
+      prePersist: [ setCreationTimestamp, setUpdateTimestamp ]

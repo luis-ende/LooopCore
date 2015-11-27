@@ -1,0 +1,570 @@
+// lines 6 - 22 have to replace the content of mopabootstrapbundle.scss because
+// $icon-font-path and the main entry point into bootstrap were broken
+
+//@import "../../../../../../web/bundles/mopabootstrap/sass/mopabootstrapbundle.scss";
+
+// variables
+$icon-font-path: "../../mopabootstrap/fonts/bootstrap/";
+
+// Bootstrap overrides, such as the asset-url(..) function.
+@import "bootstrap_and_overrides";
+
+// Main bootstrap.sass entry point
+@import "_bootstrap";
+
+// The Paginator less for MopaBootstrapBundle
+@import "paginator";
+
+// Collection support for MopaBootstrapBundle
+@import "collections";
+
+// FormFlow support for MopaBootstrapBundle
+@import "form_flow";
+
+
+// define colunms for a standard 12-column-layout
+// this basically reduces the number of columns
+// each row can comprise either:
+//
+// looop_column_side + looop_column_main_3
+//
+// or
+//
+// looop_column_side + looop_column_main_2 + looop_column_side
+
+// calculate column-width in parts if twelve
+
+// on xs-screens (mobile) all columns get expanded to maximum screen width
+$looop_column_side_xs: 12;
+$looop_column_main_3_xs: 12;
+$looop_column_main_2_xs: 12;
+
+// on all screens larger than xs the mentioned column type will fit exactly
+$looop_column_side_sm: 3.2;
+$looop_column_main_3_sm: 12 - 2 * $looop_column_side_sm;
+$looop_column_main_2_sm: 12 - $looop_column_side_sm;
+
+$looop_column_side_md: 2.5;
+$looop_column_main_3_md: 12 - 2 * $looop_column_side_md;
+$looop_column_main_2_md: 12 - $looop_column_side_md;
+
+$looop_column_side_lg: 2.1;
+$looop_column_main_3_lg: 12 - 2 * $looop_column_side_lg;
+$looop_column_main_2_lg: 12 - $looop_column_side_lg;
+
+// define colors
+$looop_color_main: #005EBB;
+$looop_color_main_act: #4593D1;
+$looop_color_gray: #CCCCCC;
+$looop_color_background: #FFFFFF;
+$looop_color_background_content: #E1DAE6;
+$looop_color_font_bright: #FFFFFF;
+$looop_color_font_dark: #666666;
+
+// define other
+$looop_height_logo: 137px;
+$looop_height_nav_border: 12px;
+
+$looop_font_size_default: 1em;
+
+$looop_padding: 0.75em;
+
+// set left container margin to zero (only affects .container not .container-fluid)
+.container {
+    margin-left: 0;
+}
+
+// define traits for easier column handling
+
+%looop_column_side {
+    @include make-xs-column($looop_column_side_xs);
+    @include make-sm-column($looop_column_side_sm);
+    @include make-md-column($looop_column_side_md);
+    @include make-lg-column($looop_column_side_lg);
+}
+
+%looop_column_side_offset {
+    @include make-sm-column-offset($looop_column_side_sm);
+    @include make-md-column-offset($looop_column_side_md);
+    @include make-lg-column-offset($looop_column_side_lg);
+}
+
+%looop_column_main_2 {
+    @include make-xs-column($looop_column_main_2_xs);
+    @include make-sm-column($looop_column_main_2_sm);
+    @include make-md-column($looop_column_main_2_md);
+    @include make-lg-column($looop_column_main_2_lg);
+}
+
+%looop_column_main_3 {
+    @include make-xs-column($looop_column_main_3_xs);
+    @include make-sm-column($looop_column_main_3_sm);
+    @include make-md-column($looop_column_main_3_md);
+    @include make-lg-column($looop_column_main_3_lg);
+}
+
+header {
+
+    .looop_logo {
+        @extend %looop_column_side;
+        background-image: url('../images/logo_lg.png');
+        background-repeat: repeat-x;
+        background-position: left bottom;
+
+        span {
+            display: block;
+            height: $looop_height_logo;
+            visibility: hidden;
+        }
+
+        ul {
+            @extend .list-inline;
+        }
+    }
+
+    .looop_banner {
+        @extend %looop_column_main_2;
+        background-color: $looop_color_main;
+        height: $looop_height_logo + $font-size-base * $line-height-base + 10;
+        background-image: url('../images/banner.jpeg');
+        background-repeat: no-repeat no-repeat;
+        background-position: left bottom;
+    }
+
+    .looop_menu_top {
+        @extend %looop_column_main_2;
+        @extend %looop_column_side_offset;
+
+        h2 {
+            @media (min-width: $screen-sm-min) {
+                display: none;
+            }
+        }
+
+        ul {
+            @media (min-width: $screen-sm-min) {
+                margin: -$looop_height_nav_border ($grid-gutter-width / -2) 0 ($grid-gutter-width / -2);
+                background-color: transparent;
+                background-image: url('../images/looop_menu_top_bg.gif');
+                background-repeat: repeat-x ;
+
+                .current,
+                li:hover {
+                    margin-top: $looop_height_nav_border/-2;
+
+                    a {
+                        padding-top: $looop_height_nav_border/2 + $font-size-base/2;
+                        background-image: url('../images/looop_menu_top_bg_act.gif');
+                        background-repeat: no-repeat;
+                        background-position: right top;
+                        background-color: $looop_color_background;
+                        color: #707478;
+                        text-decoration: none;
+                    }
+                }
+
+
+                li {
+                    width: auto;
+
+                    a {
+                        padding: $font-size-base/2 $font-size-base;
+                        margin-top: $looop_height_nav_border/2;
+                        background-image: url('../images/looop_menu_top_bg_llp.gif');
+                        background-position: right top;
+                        background-repeat: no-repeat;
+                        background-color: $looop_color_background;
+                        color: #333333;
+                    }
+
+                    ul {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .collapse {
+
+            @media (min-width: $screen-sm-min) {
+                display: block !important;
+                visibility: visible !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+        }
+
+    }
+
+    .looop_header_top {
+        height: 31px;
+        margin-bottom: 0;
+
+        p {
+            font-size: 1.125em;
+            font-weight: bold;
+            color: $looop_color_font_bright;
+        }
+    }
+
+}
+
+.middle {
+
+    .looop_news {
+        @extend %looop_column_side;
+    }
+
+    .looop_main {
+        @extend %looop_column_main_2;
+    }
+
+    .looop_menu_side {
+        @extend %looop_column_side;
+
+        &>div {
+            margin-top: 15px;
+
+            /*&> div {
+                margin-top: 15px;
+            }*/
+        }
+    }
+}
+
+footer {
+
+}
+
+.looop_nav_menu {
+
+    @mixin looop_nav_menu_highlight() {
+        background-color: $looop_color_main_act;
+        background-image: url('../images/looop_menu_side_act.gif');
+    }
+
+    .current_ancestor {
+        &> a {
+            @include looop_nav_menu_highlight();
+        }
+    }
+
+    .current {
+        &> a {
+            @include looop_nav_menu_highlight();
+        }
+    }
+
+    div div {
+        @include clearfix();
+
+        div {
+            padding: 0.2em 1em;
+            background-color: $looop_color_main;
+            background-image: none;
+            background-position: left center;
+            background-repeat: no-repeat ;
+            color: $looop_color_font_bright;
+            text-decoration: none;
+            margin: 0 0 0.4em 0;
+        }
+    }
+
+    .level-1 {
+        margin-left: ($grid-gutter-width / -2);
+    }
+
+    .level-2 {
+        margin-left: 0;
+        font-size: 0.85em;
+    }
+
+    .level-3 {
+        margin-left: ($grid-gutter-width / 2);
+        font-size: 0.82em;
+    }
+
+    .level-4 {
+        margin-left: ($grid-gutter-width);
+        font-size: 0.80em;
+    }
+
+    .level-5 {
+        margin-left: ($grid-gutter-width * 1.5);
+        font-size: 0.80em;
+    }
+
+    .level-6 {
+        margin-left: ($grid-gutter-width * 2);
+        font-size: 0.80em;
+    }
+
+    select {
+        width: 100%;
+        color: $looop_color_font_dark;
+    }
+
+    h2 {
+        font-size: 1em;
+
+        a {
+            span {
+                display: inline-block;
+            }
+        }
+    }
+
+    ul {
+        @include clearfix();
+        list-style-type: none;
+        padding: 0;
+        margin: 0 0 0 ($grid-gutter-width / -2);
+
+        li {
+            width: 100%;
+            float: left;
+
+            a, span {
+                text-transform: uppercase;
+                font-weight: bold;
+                display: block;
+                padding: 0.2em 1em;
+                margin-bottom: 0.4em;
+                background-color: $looop_color_main;
+                background-image: none;
+                background-position: left center;
+                background-repeat: no-repeat ;
+                color: $looop_color_font_bright;
+                text-decoration: none;
+
+                &:hover{
+                    @include looop_nav_menu_highlight();
+                }
+            }
+
+            ul {
+                margin: 0 0 0 ($grid-gutter-width / 2);
+
+                a, span {
+                    text-transform: uppercase;
+                    font-weight: bold;
+                    font-size: 0.85em;
+                }
+
+                ul {
+                    a, span {
+                        text-transform: none;
+                        font-weight: bold;
+                        font-size: 0.82em;
+
+                        ul {
+                            a, span {
+                                text-transform: none;
+                                font-weight: normal;
+                                font-size: 0.80em;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .looop_toggle {
+        @include clearfix();
+        display: block;
+
+        @media (min-width: $screen-sm-min) {
+            display: none;
+        }
+
+        button {
+            @extend .navbar-toggle;
+            border-color: #DDD;
+
+            .icon-bar {
+                @extend .icon-bar;
+                background-color: #DDD;
+            }
+
+            .icon-bar + .icon-bar {
+                margin-top: 4px;
+            }
+        }
+
+        .looop_nav_current {
+            @extend .navbar-text;
+            display: block;
+            float: left;
+        }
+    }
+
+    .collapse {
+
+        /*@media (min-width: $screen-sm-min) {
+            display: block !important;
+            visibility: visible !important;
+            height: auto !important;
+            overflow: visible !important;
+        }*/
+    }
+}
+
+.looop_hide_on_small {
+
+    @media (max-width: $screen-sm-max) {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    @media (min-width: $screen-sm-min) {
+        display: block !important;
+        visibility: visible !important;
+    }
+}
+
+.looop_hide_on_large {
+
+    @media (min-width: $screen-sm-min) {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    @media (max-width: $screen-sm-max) {
+        display: block !important;
+        visibility: visible !important;
+    }
+}
+
+.looop_bar {
+    background-color: #FFF;
+    padding: 0;
+    margin-bottom: 25px;
+    @include clearfix();
+
+    /* .panel is needed to get the js-component of the accordion-style collapse-function going but its graphical implications are not wanted */
+    .panel {
+        margin-bottom: 0;
+        background-color: inherit;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    nav {
+        @include clearfix();
+        clear: both;
+        padding: 0.5em 0.5em 0 0.5em;
+    }
+
+    .looop_bar_box {
+        float: left;
+        /*padding: 0.5em;*/
+        border-style: none none solid none;
+        border-color: $looop_color_gray;
+        border-width: 2px;
+        font-weight: bold;
+    }
+
+    h2 {
+        font-size: 1em;
+        font-weight: bold;
+        margin: 0 0 0.5em 0;
+
+    }
+
+    .looop_bar_filters {
+        margin: 0;
+        padding: 0;
+        @include clearfix();
+
+        li {
+            float: left;
+            display: block;
+
+            a {
+                display: block;
+                /*padding: 0.75em;*/
+                padding: 0.4em 0.75em;
+                color: $looop_color_gray - #CCC;
+                background-color: #FFF;
+
+                &:hover, &.collapsed {
+                    background-color: transparent;
+                    text-decoration: none;
+                    color: $looop_color_gray;
+                }
+
+                &:hover {
+                    color: $looop_color_gray - #CCC;
+                }
+            }
+        }
+    }
+    
+    #looop_bar_options {
+        float: right;
+    }
+
+    .tabs {
+        border-color: #CCC;
+        border-style: none none solid none;
+        border-width: 1px;
+        list-style-type: none;
+        margin: 0 -0.5em;
+        margin-top: 1em;
+        padding: 0;
+        @include clearfix();
+
+        li {
+            float: left;
+            display: block;
+            margin: 0;
+            margin-bottom: -1px;
+
+            a {
+                display: block;
+                padding: $looop_padding;
+                border-color: #BBB;
+                border-style: solid;
+                border-width: 1px;
+                /*background-color: #DDD;*/
+                background-color: #EEE;
+                color: $looop_color_gray;
+
+                &:hover {
+                    /*background-color: #FFF;*/
+                    background-color: #EEE;
+                    border-bottom-color: #BBB;
+                    text-decoration: none;
+                    color: $looop_color_gray - #CCC;
+                }
+                &.active {
+                    background-color: #FFF;
+                    border-bottom-color: #FFF;
+                    color: $looop_color_gray - #CCC;
+                    font-weight: bold;
+                    /*background-color: $looop_color_background_content;*/
+                    /*border-bottom-color: $looop_color_background_content;*/
+                }
+            }
+
+            &:first-child {
+                margin-left: 0.5em;
+            }
+        }
+    }
+}
+
+.looop_content {
+    /*background-color: $looop_color_background_content;*/
+    background-color: #FFF;
+    padding: $looop_padding;
+    border-style: none solid solid solid;
+    border-width: 1px;
+    border-color: $looop_color_gray;
+    
+    table {
+        @extend .table;
+    }
+}

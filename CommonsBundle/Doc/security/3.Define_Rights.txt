@@ -1,0 +1,116 @@
+Symfony2 has 2 base systems for checking rights.
+
+1. Voters, 2. ACLs
+
+(1. ACLs:)
+(not used in LLP base!!)
+Define for each object in the DB the rights for each user or role.
+  E.g. blog entry with ID "1234" can be read by user with ID "4321"
+-> with a big ACL table in the DB
+-> will probably never be needed, but can be added to LooopCoreCommonsBundle at any time.
+
+
+2. Voters
+#########
+-> used in LLP base
+see http://symfony.com/doc/current/cookbook/security/voters_data_permission.html
+
+Voters are self-defined classes that check if certain things are allowed.
+Every bundle can define its own voters.
+
+a) voters defining rights for a certain object (= DB entry)
+
+Idea: Every voter is a class responsible for a certain entity class (e.g. "BlogEntry")
+For this class it defines attributes (=priviliges). 
+An attribute is a string like e.g. "SEE_COMMENTS"
+
+Check the privilege in an action: 
+---------------------------------
+$this->get('security.context')->isGranted('SEE_COMMENTS', $blogEntry)
+-> returns true or false
+
+Check the privilege in a view:
+------------------------------
+{% if is_granted('SEE_COMMENTS', blogEntry) %}
+  You are allowed to see the comments!
+{% endif %}
+
+
+b) "global" voters to define rights 
+
+-> Instead of being responsible for a class, a voter can be "global" and decide things without having an object.
+To separate different global voters, each is responsible for an "area", which is given as a string.
+
+-> e.g. if we define a voter responsible for "LLPTEST_COMPANY", this voter can have the attribute "CREATE".
+We can check this right using:
+{% if is_granted('CREATE', 'LLPTEST_COMPANIES') %}
+
+Note: it is possible to use "isGranted" at a lot of other places, e.g. in the doc-block of an action,
+so that an action is even not executed if it fails. See symfony2 documentation
+
+
+
+3. Defining voters
+##################
+Note: there can be always several voters for each class or area. 
+If one voter does not support an attribute, the next one is used, until a matching voter is found.
+
+a) Defining Entity voters -> deciding what can be done on a given object.
+-------------------------
+Convention: Put these voters in <Bundle>/Security/EntityVoters
+(-> See "UserVoter" in exampleVoters dir.)
+
+-> create a class that extends LooopCore\CommonsBundle\Security\BaseVoter
+-> create an attribute $responsibleFor containing the class name this voter should work on
+-> create an attribute $possibleAttributes as an array containing all attributes (=privileges) as a string
+-> vote(TokenInterface $token, $object, array $attributes) {
+Note: this method is called automatically when executing "isGranted()", and the parameters are filled in automatically.
+
+At the beginning, one should always write:
+	// Just return "I don't know" if this voter is not responsible
+        if (!$this->isResponsible($object, $attributes)) {
+            return self::ACCESS_ABSTAIN;
+        }
+        // Get the logged in user and security object (maybe we'll need it.)
+        $loggedInUser = $this->getLoggedInUser($token);
+        $securityContext = $this->getSecurityContext();
+        
+Then, any test can be written in the code.
+E.g.: "EDIT" on an object should be possible only by the owner:
+
+  if (in_array("EDIT", $attributes)) {
+      if ($object->getOwner() == $loggedInUser) {
+        return self::ACCESS_GRANTED;
+      }
+  }
+  // in the end, if we couldn't grant anything until now, just deny.
+  return self::ACCESS_DENIED;
+  
+It is possible to allow/deny for all attributes at the beginning (e.g. ROLE_ADMIN is always for all attributes)
+or also to deny etc.
+
+The $securityContext gives the "isGranted()" method known from above, which makes it possible
+to check if something else is allowed.
+
+E.g. we can say that access to a blog entry is allowed if we have access to the whole blog:
+  // $object is a "BlogEntry" object
+  if ($securityContext->isGranted("EDIT", $object->getBlog())) {
+    return self::ACCESS_GRANTED;
+  }
+  
+NOTE: $attributes is given as an array, because isGranted() can take several attributes in an array.
+{% if is_granted(['CREATE', 'EDIT'], 'LLPTEST_COMPANIES') %}
+That means, check if the user has the right to edit OR to create things in the area.
+That is practical in views, when we e.g. want to display a link, if the user has the right to at least one 
+thing that can be done at the following page.
+
+
+b) Defining global voters
+-------------------------
+Convention: Put these voters in <Bundle>/Security/GlobalVoters
+
+-> very similar to entity voters, but "$responsibleFor" is now a string, not a class name:
+e.g. protected $responsibleFor = "LLPTEST_TAX_MANAGEMENT";
+
+Also the vote() function works the same way. The difference is, that we do not use "$object", because
+we are global. ($object just conatains the string of the area, e.g. "LLPTEST_TAXES_MANAGEMENT")

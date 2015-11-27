@@ -1,0 +1,106 @@
+LooopCore\CommonsBundle\Entity\User:
+    type: entity
+    table: commons_user
+    fields:
+
+        # the id name must be _id_hidden, because the "id" is already defined by the
+        # FOSUserBundle and mustn't be overridden here.
+        id:
+            id: true
+            type: integer
+            column: id
+            generator:
+                strategy: IDENTITY
+                
+        # custom fields
+        firstName:
+            type: string
+            length: 30
+            nullable: true
+        lastName:
+            type: string
+            length: 30
+            nullable: true
+        title:
+            type: string
+            length: 10
+            nullable: true
+
+
+        createdAt:
+            type: datetime
+            nullable: false
+        updatedAt:
+            type: datetime
+            nullable: false
+            
+
+                
+        # fields from FOSUserBundle
+        # mapping definitions in FOSUserBundle classes
+#        username:
+#            type: string
+#            nullable: false
+#        usernameCanonical:
+#            type: string
+#            nullable: true
+#        email:
+#            type: string
+#            nullable: false
+#        emailCannonical:
+#            type: string
+#            nullable: true
+#        enabled:
+#            type: boolean
+#            nullable: true
+#        salt:
+#            type: string
+#            nullable: true
+#        password:
+#            type: string
+#            nullable: true
+#        lastLogin:
+#            type: datetime
+#            nullable: true
+#        locked:
+#            type: boolean
+#            nullable: true
+#        expired:
+#            type: boolean
+#            nullable: true
+#        expiresAt:
+#            type: datetime
+#            nullable: true
+#        confirmationToken:
+#            type: string
+#            nullable: true
+#        passwordRequestedAt:
+#            type: datetime
+#            nullable: true
+#        roles:
+#             (array)
+#        credentialsExpired:
+#            type: boolean
+#            nullable: true
+#        credentialsExpireAt:
+#            type: boolean
+#            nullable: true
+        
+        
+    manyToMany:
+      groups:
+        targetEntity: LooopCore\CommonsBundle\Entity\Group
+        inversedBy: users
+        joinTable:
+          name: commons__userToGroup
+          joinColumns:
+            user_id:
+              referencedColumnName: id
+          inverseJoinColumns:
+            group_id:
+              referencedColumnName: id
+
+            
+    lifecycleCallbacks:
+      preUpdate: [ setUpdateTimestamp ]
+      prePersist: [ setCreationTimestamp, setUpdateTimestamp ]

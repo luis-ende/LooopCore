@@ -1,0 +1,48 @@
+Roles are fixed Strings that are defined by each bundle.
+
+Each bundle can use these roles e.g. in the security checks (see "voters").
+
+Roles have a hierarchy, that means that a role can include all rights of another role.
+The basic role defined by symfony is "ROLE_USER" for everyone who is logged in.
+If a role should not include (=inherit) another role, it must inherit "ROLE_USER"
+
+Roles are connected to groups M:N in the database.
+
+There are fixed ROLES defined in the config files of each bundle.
+See Resources/config/services.yml in Bundle folder.
+
+The definition can be like this:
+
+looopcore.security.bundle_role_hierarchy:
+      class: LooopCore\CommonsBundle\Security\Roles\BundleRoleHierarchy
+      public: false
+      arguments: 
+        - roles: 
+          - ROLE_ADMIN: [ROLE_llpBase_ADMIN]
+          - ROLE_SUPER_ADMIN: [ROLE_ADMIN]
+          - ROLE_llpBase_ADMIN: [ROLE_USER]
+          - ROLE_TEST: [ROLE_USER]
+          - ROLE_TEST2: [ROLE_USER]
+          - ROLE_llpBase_EXAMPLE: [ROLE_TEST, ROLE_TEST2]
+      tags: 
+          - { name: looopcore.security.bundle_roles }
+
+Here, ROLE_llpBase_EXAMPLE inherits ROLE_TEST and ROLE_TEST2.
+
+
+The name in the first line can be set freely, important is the tag in the last line
+In the roles: section roles can be defined with their parent roles (that means roles they include.)
+If a role should not include another one, write "ROLE_USER", which is the default role in symfony2.
+
+In the DB, a group can be connected to several roles.
+This is managed by the FOSUserBundle.
+To add a role to a group with PHP:
+
+  $group = \LooopCore\CommonsBundle\Entity\Group::find(1);
+  $group->addRole("ROLE_ADMIN");
+  $group->save();
+  
+  
+TODO:
+Add a GUI for connectiong the defined roles to groups in the database.
+Idea: Use the SonatAdminBundle to do this.

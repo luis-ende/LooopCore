@@ -1,0 +1,37 @@
+doctrine:
+    dbal:
+        mapping_types:
+            enum: string
+        types:
+            json: Sonata\Doctrine\Types\JsonType
+
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        # Enable the SonataAdminBundle block
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+        sonata.admin.block.search_result:
+        sonata.user.block.menu:
+        sonata.user.block.account:
+        sonata.block.service.text:
+        sonata.block.service.rss:
+        # Your other blocks
+        
+        
+sonata_admin:
+    title:      LLP1 Administration
+    security:
+        handler: sonata.admin.security.handler.role
+sonata_user:
+    class:
+        user:               LooopCore\CommonsBundle\Entity\User
+        group:              LooopCore\CommonsBundle\Entity\Group
+    admin:
+        user:
+            class:          LooopCore\CommonsBundle\Entity\AdminDefs\UserAdmin
+            controller:     SonataAdminBundle:CRUD
+        group:
+            class:          LooopCore\CommonsBundle\Entity\AdminDefs\GroupAdmin
+            controller:     SonataAdminBundle:CRUD

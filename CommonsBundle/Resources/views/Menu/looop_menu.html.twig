@@ -1,0 +1,138 @@
+{% extends 'LooopCoreCommonsBundle:Menu:knp_menu.html.twig' %}
+
+{% macro attributes(attributes) %}
+    {%- for name, value in attributes -%}
+    {%- if value is not none and value is not sameas(false) -%}
+    {{- ' %s="%s"'|format(name, value is sameas(true) ? name|e : value|e)|raw -}}
+    {%- endif -%}
+    {%- endfor -%}
+{% endmacro %}
+
+{% block compressed_root %}
+    {% spaceless %}
+        {{ block('root') }}
+    {% endspaceless %}
+{% endblock %}
+
+{% block root %}
+    {%- set listAttributes = item.childrenAttributes -%}
+    {%- set newLevel = item -%}
+    {%- set lastLevel = 0 -%}
+    {%- set level = 0 -%}
+    <h2>
+        {% block menu_header %}
+            <a href="#" data-toggle="collapse" data-target="#llp_menu_{{ item.name }}">
+                <span>{{ item.name }}</span>
+                <span class="caret"></span>
+            </a>
+        {% endblock %}
+    </h2>    
+    <div class="in" id="llp_menu_{{item.name}}">
+    {{ block('newLevel') }}
+    </div>
+{% endblock %}
+
+{% block newLevel %}
+    {%- set level = level + 1 -%}
+    {%- set hasChildren = 0 -%}
+    {%- set currentLevel = newLevel -%}
+    {%- if newLevel.hasChildren and options.depth is not sameas(0) and item.displayChildren -%}
+        {%- set currentItem = item -%}
+        {%- for item in currentLevel.children -%}
+        {#{%-  -%}#}
+            {%- if item.hasChildren and options.depth is not sameas(0) and item.displayChildren -%}
+                {%- set hasChildren = 1 -%}
+            {%- endif -%}
+        {%- endfor -%}
+        {%- set item = currentItem -%}
+        {%- if hasChildren == 0 -%}
+            {%- set lastLevel = currentLevel -%}
+            {{ block('lastLevel') }}
+        {%- else -%}
+            {%- set newLevel = 0 -%}
+            {%- set lastLevel = 0 -%}                                    
+            <ul{{ _self.attributes(listAttributes) }} class="faux-select level-{{level}}">
+                {%- for item in currentLevel.children -%}
+                {#{%-  -%}#}
+                    {%- if item.hasChildren and options.depth is not sameas(0) and item.displayChildren -%}
+                        {%- if matcher.isAncestor(item) %}
+                        {#%- if item.currentAncestor -%#}
+                        {%- set newLevel = item -%}
+                        {%- elseif matcher.isCurrent(item) %}
+                        {#%- elseif item.current -%#}
+                        {%- set lastLevel = item -%}
+                        {%- endif -%}
+                    {%- endif -%}
+                    {{ block('viewItem')}}
+                {%- endfor -%}
+            </ul>            
+            {%- if newLevel is not sameas(0) -%}
+                {{ block('newLevel') }}
+            {%- elseif lastLevel is not sameas(0) -%}
+                {%- set level = level + 1 -%}
+                {{ block('lastLevel') }}
+            {%- endif -%}
+        {%- endif -%}
+    {%- else -%}
+        {%- set level = level + 1 -%}
+        {{ block('lastLevel') }}
+    {%- endif -%}
+{% endblock %}
+
+{% block lastLevel %}
+    {%- if item.hasChildren and options.depth is not sameas(0) and item.displayChildren -%}
+    {%- set currentLevel = lastLevel -%}
+    <ul{{ _self.attributes(listAttributes) }} class="level-{{level}}">
+        {%- for item in currentLevel.children -%}        
+        {{ block('viewItem')}}        
+        {%- endfor  -%}
+    </ul>
+    {%- endif -%}
+{% endblock %}
+
+{% block viewItem %}
+    {% if item.displayed %}
+        {# building the class of the item #}
+        {%- set classes = item.attribute('class') is not empty ? [item.attribute('class')] : [] %}
+        {%- set linkAttributes = item.linkAttributes %}
+        {#%- if item.current %#}
+        {%- if matcher.isCurrent(item) %}
+        {%- set classes = classes|merge([options.currentClass]) %}
+        {%- set linkClasses = item.linkAttributes('class') is not empty ? [item.linkAttributes('class')] : [] %}
+        {%- set linkClasses = linkClasses|merge(['active']) %}
+        {%- set linkAttributes = linkAttributes|merge({'class': linkClasses|join(' ')}) %}
+        {#%- elseif item.currentAncestor %#}
+        {%- elseif matcher.isAncestor(item) %}
+        {%- set classes = classes|merge([options.ancestorClass]) %}
+        {%- set linkClasses = item.linkAttributes('class') is not empty ? [item.linkAttributes('class')] : [] %}
+        {%- set linkClasses = linkClasses|merge(['active']) %}
+        {%- set linkAttributes = linkAttributes|merge({'class': linkClasses|join(' ')}) %}
+        {%- endif %}
+        {%- if item.actsLikeFirst %}
+        {%- set classes = classes|merge([options.firstClass]) %}
+        {%- endif %}
+        {%- if item.actsLikeLast %}
+        {%- set classes = classes|merge([options.lastClass]) %}
+        {%- endif %}
+        {%- set attributes = item.attributes %}
+        {%- if classes is not empty %}
+        {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
+        {%- endif %}
+        {# displaying the item #}
+        <li{{ _self.attributes(attributes) }}>            
+            {%- if item.uri is not empty and (not item.current or options.currentAsLink) %}
+            {{ block('linkElement') }}
+            {%- else %}
+            {{ block('spanElement') }}
+            {%- endif %}
+        </li>
+    {% endif %}
+{% endblock %}
+
+
+
+{% block linkElement %}<a href="{{ item.uri }}"{{ _self.attributes(linkAttributes) }}>{{ block('label') }} </a>{% endblock %}
+
+{% block spanElement %}<span{{ _self.attributes(linkAttributes) }}>{{ block('label') }}</span>{% endblock %}
+
+{% block label %}{% if options.allow_safe_labels and item.getExtra('safe_label', false) %}{{ item.label|raw }}{% else %}{{ item.label }}{% endif %}{% endblock %}

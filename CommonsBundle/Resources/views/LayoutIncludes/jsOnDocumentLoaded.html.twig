@@ -1,0 +1,16 @@
+<script type="text/javascript">
+    /** Initialize DatePicker locale */
+    $(document).ready(function(){
+        locale = "{{ app.request.locale }}".replace("_", "-");
+        locale2 = locale.split('-')[0];
+        if($.datepicker.regional[locale] != undefined ){
+            $.datepicker.setDefaults($.datepicker.regional[locale]);
+        } else if($.datepicker.regional[locale2] != undefined ){
+            $.datepicker.setDefaults($.datepicker.regional[locale2]); 
+        } else {
+            $.datepicker.setDefaults($.datepicker.regional["fr"]);
+        }
+    });
+    $('.datepicker').datepicker({ dateFormat: "{{ date_format_datepicker }}"});
+</script>
+

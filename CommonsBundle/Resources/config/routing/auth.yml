@@ -1,0 +1,5 @@
+base_auth_add_admin:
+    pattern:  /addAdmin
+    defaults: 
+      _controller: "LooopCoreCommonsBundle:Auth:addAdmin"
+      
